@@ -1,0 +1,5 @@
+1 fleche_bas 400 335 4 0
+0 comte_down 342 60 500 0
+0 reine_down 440 60 402 0
+0 garde1_up 330 290 55 0
+0 garde2_up 450 290 55 1

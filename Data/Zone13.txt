@@ -1,0 +1,2 @@
+1 fleche_gauche 20 250 12 2985809
+0 taverne_down 485 300 253 2985

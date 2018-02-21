@@ -1,0 +1,5 @@
+1 fleche_haut 365 20 14 2094
+0 garde2_down 300 60 55 109490
+0 garde1_down 410 60 55 63998
+0 prince_up 378 303 502 39898
+0 comtesse_up 330 303 401 398893

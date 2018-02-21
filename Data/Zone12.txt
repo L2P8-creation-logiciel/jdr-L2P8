@@ -1,0 +1,4 @@
+1 fleche_gauche 20 330 11 28964
+1 fleche_haut 400 270 13 25715
+1 fleche_droite 720 330 14 298459
+0 taverne_left 300 300 110 24889

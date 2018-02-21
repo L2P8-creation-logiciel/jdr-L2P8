@@ -1,0 +1,2 @@
+1 fleche_gauche 20 160 9 30588
+0 tavernier_down 480 150 150 303085

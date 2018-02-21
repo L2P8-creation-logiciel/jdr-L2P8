@@ -1,0 +1,10 @@
+lettre_prince 201 0 0 0 Letter_given_by;the_prince
+letter_count 202 0 0 0 Letter_given_by;the_count
+biere 204 0 0 0 do_not_abuse
+armor 39 5 2 0 leather_armor;;+5_def_bonus
+armor2 40 10 2 0 steel_armor;;+10_def_bonus
+armor3 41 20 2 0 knight_armor;;+20_def_bonus
+sword 50 10 1 0 master_sword;;+10_atk_bonus
+axe 51 20 1 0 steel_axe;;+20_atk_bonus
+spear 49 40 1 0 spear;;+40_atk_bonus
+poison 205 0 0 0 this_could_be;useful_one_day...

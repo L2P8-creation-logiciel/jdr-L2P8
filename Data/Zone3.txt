@@ -1,0 +1,4 @@
+1 fleche_droite 720 165 4 427248
+1 fleche_gauche 90 85 2 1747184
+0 garde1_up 250 220 55 2
+0 garde2_right 130 100 52 37310

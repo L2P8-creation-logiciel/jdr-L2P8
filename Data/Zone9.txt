@@ -1,0 +1,9 @@
+1 fleche_haut 145 155 8 36088
+1 fleche_droite 740 165 10 3083
+1 fleche_haut 290 20 6 3508
+1 fleche_bas 290 330 11 359935
+0 vendeur_down 80 250 250 2490290
+0 comte_down 370 120 251 13901
+0 tavernier_down 490 120 252 309
+0 tavernier_up 600 320 400 3598
+0 garde2_right 10 150 55 248

@@ -1,0 +1,6 @@
+1 fleche_haut 340 20 9 3988
+0 garde2_up 310 70 55 193091
+0 garde1_up 360 70 55 139808
+0 garde1_down 310 200 55 25751
+0 garde2_down 360 200 55 25892
+0 garde1_down 335 230 51 25025
