@@ -66,18 +66,18 @@ void loadArea(int area) {
 
   FILE *file = fopen(path, "r");
   if (!file) {
-    printf("%s : not found", path);
-    assert(0);
+	printf("%s : not found", path);
+	assert(0);
   }
 
   cleanArea();
 
   while (!feof(file)) {
-    Element elem;
-    fscanf(file, "%d %s %d %d %d %d\n", &elem.type, elem.name, &elem.rect.x,
-           &elem.rect.y, &elem.value, &elem.value2);
+	Element elem;
+	fscanf(file, "%d %s %d %d %d %d\n", &elem.type, elem.name, &elem.rect.x,
+		   &elem.rect.y, &elem.value, &elem.value2);
 
-    addElement(elem);
+	addElement(elem);
   }
 
   char file_name[12];
@@ -124,8 +124,8 @@ void addElement(Element elem) {
  */
 int intersects(SDL_Rect rect, int x_mouse, int y_mouse) {
   if (x_mouse >= rect.x && x_mouse <= rect.x + rect.w && y_mouse >= rect.y &&
-      y_mouse <= rect.y + rect.h)
-    return 1;
+	  y_mouse <= rect.y + rect.h)
+	return 1;
   return 0;
 }
 
@@ -142,10 +142,10 @@ int intersects(SDL_Rect rect, int x_mouse, int y_mouse) {
 int elementTriggered(int x, int y) {
   int i;
   for (i = 0; i < Gameplay.nb_elements; i++) {
-    if (intersects(Gameplay.elements[i].rect, x, y)) {
-      processElement(i);
-      return 1;
-    }
+	if (intersects(Gameplay.elements[i].rect, x, y)) {
+	  processElement(i);
+	  return 1;
+	}
   }
 
   return 0;
@@ -166,19 +166,19 @@ int elementTriggered(int x, int y) {
 int buttonTriggered(int x, int y, SDL_Rect rects[]) {
   int i;
   for (i = 0; i < 4; i++) {
-    if (Gameplay.state == STATE_EXPLORATION && i != 2)
-      continue;
+	if (Gameplay.state == STATE_EXPLORATION && i != 2)
+	  continue;
 
-    if (intersects(rects[i], x, y)) {
-      if (Gameplay.state == STATE_INVENTORY)
-        processAction(i + 4);
-      else if (Gameplay.state == STATE_TALK)
-        processAction(i + 8);
-      else
-        processAction(i);
+	if (intersects(rects[i], x, y)) {
+	  if (Gameplay.state == STATE_INVENTORY)
+		processAction(i + 4);
+	  else if (Gameplay.state == STATE_TALK)
+		processAction(i + 8);
+	  else
+		processAction(i);
 
-      return 1;
-    }
+	  return 1;
+	}
   }
 
   return 0;
@@ -197,11 +197,11 @@ int buttonTriggered(int x, int y, SDL_Rect rects[]) {
 int itemTriggered(int x, int y, SDL_Rect rects[]) {
   int i;
   for (i = 0; i < MAX_ITEM; i++) {
-    if (intersects(rects[i], x, y)) {
-      Gameplay.selected_item = Gameplay.items[i];
-      Gameplay.index_selected_item = i;
-      return 1;
-    }
+	if (intersects(rects[i], x, y)) {
+	  Gameplay.selected_item = Gameplay.items[i];
+	  Gameplay.index_selected_item = i;
+	  return 1;
+	}
   }
 
   return 0;
@@ -224,37 +224,37 @@ void processElement(int element_index) {
   Element elem = Gameplay.elements[element_index];
 
   if (elem.type == 0) {
-    Gameplay.state = STATE_INTERACTION;
-    Gameplay.interaction_index = element_index;
+	Gameplay.state = STATE_INTERACTION;
+	Gameplay.interaction_index = element_index;
 
-    int i;
-    for (i = 0; i < Gameplay.nb_npc; i++) {
-      if (Gameplay.npcs[i].type == elem.value &&
-          elem.value2 == Gameplay.npcs[i].unique_id) {
-        Gameplay.index_current_npc = i;
-        Gameplay.npcs[i].status =
-            npcResponse(&Gameplay.npcs[i], NONE, 0, Gameplay.name);
-        return;
-      }
-    }
+	int i;
+	for (i = 0; i < Gameplay.nb_npc; i++) {
+	  if (Gameplay.npcs[i].type == elem.value &&
+		  elem.value2 == Gameplay.npcs[i].unique_id) {
+		Gameplay.index_current_npc = i;
+		Gameplay.npcs[i].status =
+			npcResponse(&Gameplay.npcs[i], NONE, 0, Gameplay.name);
+		return;
+	  }
+	}
 
-    Gameplay.npcs =
-        realloc(Gameplay.npcs, sizeof(*Gameplay.npcs) * (Gameplay.nb_npc + 1));
-    Gameplay.npcs[Gameplay.nb_npc].unique_id = elem.value2;
+	Gameplay.npcs =
+		realloc(Gameplay.npcs, sizeof(*Gameplay.npcs) * (Gameplay.nb_npc + 1));
+	Gameplay.npcs[Gameplay.nb_npc].unique_id = elem.value2;
 
-    if (encounterInit(elem.value, &Gameplay.npcs[Gameplay.nb_npc],
-                      Gameplay.name) == 1) {
-      printf("%d.txt not found", elem.value);
-      assert(0);
-    }
+	if (encounterInit(elem.value, &Gameplay.npcs[Gameplay.nb_npc],
+					  Gameplay.name) == 1) {
+	  printf("%d.txt not found", elem.value);
+	  assert(0);
+	}
 
-    Gameplay.index_current_npc = Gameplay.nb_npc;
-    Gameplay.nb_npc++;
+	Gameplay.index_current_npc = Gameplay.nb_npc;
+	Gameplay.nb_npc++;
 
-    Gameplay.npcs[Gameplay.index_current_npc].status = npcResponse(
-        &Gameplay.npcs[Gameplay.index_current_npc], NONE, 0, Gameplay.name);
+	Gameplay.npcs[Gameplay.index_current_npc].status = npcResponse(
+		&Gameplay.npcs[Gameplay.index_current_npc], NONE, 0, Gameplay.name);
   } else if (elem.type == 1) {
-    loadArea(elem.value);
+	loadArea(elem.value);
   }
 }
 
@@ -268,153 +268,153 @@ void processElement(int element_index) {
 void processAction(int action) {
   switch (action) {
   case ACTION_ATTACK: {
-    int index = Gameplay.index_current_npc;
+	int index = Gameplay.index_current_npc;
 
-    if (!encounterEnd(Gameplay.npcs[index])) {
-      Gameplay.npcs[index].status =
-          npcResponse(&Gameplay.npcs[index], ATTACK, 3, Gameplay.name);
-      attaque(1, &Gameplay.npcs[index]);
+	if (!encounterEnd(Gameplay.npcs[index])) {
+	  Gameplay.npcs[index].status =
+		  npcResponse(&Gameplay.npcs[index], ATTACK, 3, Gameplay.name);
+	  attaque(1, &Gameplay.npcs[index]);
 
-      if (encounterEnd(Gameplay.npcs[index])) {
-        if (Gameplay.npcs[index].type == 501) {
-          EndGame(0);
-          return;
-        } else if (Gameplay.npcs[index].type == 500) {
-          EndGame(1);
-          return;
-        } else if (Gameplay.npcs[index].type == 110) {
-          Gameplay.no_leave = 0;
-        }
+	  if (encounterEnd(Gameplay.npcs[index])) {
+		if (Gameplay.npcs[index].type == 501) {
+		  EndGame(0);
+		  return;
+		} else if (Gameplay.npcs[index].type == 500) {
+		  EndGame(1);
+		  return;
+		} else if (Gameplay.npcs[index].type == 110) {
+		  Gameplay.no_leave = 0;
+		}
 
-        pushQueue("Your opponent died.");
-        Gameplay.state = STATE_EXPLORATION;
+		pushQueue("Your opponent died.");
+		Gameplay.state = STATE_EXPLORATION;
 
-        int add = rand() % 10 + 10;
-        Gameplay.gold += add;
-        addDialog("You earn %d gold.", add);
-      }
+		int add = rand() % 10 + 10;
+		Gameplay.gold += add;
+		addDialog("You earn %d gold.", add);
+	  }
 
-      if (Gameplay.player_current_life <= 0) {
-        EndGame(0);
-        return;
-      }
-    }
+	  if (Gameplay.player_current_life <= 0) {
+		EndGame(0);
+		return;
+	  }
+	}
 
-    break;
+	break;
   }
 
   case ACTION_TALK: {
-    Gameplay.state = STATE_TALK;
-    break;
+	Gameplay.state = STATE_TALK;
+	break;
   }
 
   case ACTION_INVENTORY: {
-    Gameplay.old_state = Gameplay.state;
-    Gameplay.state = STATE_INVENTORY;
-    break;
+	Gameplay.old_state = Gameplay.state;
+	Gameplay.state = STATE_INVENTORY;
+	break;
   }
 
   case ACTION_MOVE: {
-    if (Gameplay.no_leave == 0)
-      Gameplay.state = STATE_EXPLORATION;
-    else
-      pushQueue("You can't escape from bandit. You will have to kill him.");
+	if (Gameplay.no_leave == 0)
+	  Gameplay.state = STATE_EXPLORATION;
+	else
+	  pushQueue("You can't escape from bandit. You will have to kill him.");
 
-    break;
+	break;
   }
 
   case ACTION_INV_USE: {
-    if (Gameplay.selected_item != 0) {
-      Item *item = getItemFromID(Gameplay.selected_item);
-      if (item->stat == STAT_NONE) {
-        processItem(Gameplay.selected_item);
-        Gameplay.items = inventoryDel(Gameplay.selected_item);
+	if (Gameplay.selected_item != 0) {
+	  Item *item = getItemFromID(Gameplay.selected_item);
+	  if (item->stat == STAT_NONE) {
+		processItem(Gameplay.selected_item);
+		Gameplay.items = inventoryDel(Gameplay.selected_item);
 
-        if (Gameplay.old_state == STATE_INTERACTION) {
-          int index = Gameplay.index_current_npc;
-          Gameplay.npcs[index].status =
-              npcResponse(&Gameplay.npcs[index], ITEM, item->id, Gameplay.name);
-          Gameplay.state = STATE_INTERACTION;
-        }
-      }
+		if (Gameplay.old_state == STATE_INTERACTION) {
+		  int index = Gameplay.index_current_npc;
+		  Gameplay.npcs[index].status =
+			  npcResponse(&Gameplay.npcs[index], ITEM, item->id, Gameplay.name);
+		  Gameplay.state = STATE_INTERACTION;
+		}
+	  }
 
-      Gameplay.selected_item = 0;
-      Gameplay.index_selected_item = -1;
-    }
+	  Gameplay.selected_item = 0;
+	  Gameplay.index_selected_item = -1;
+	}
 
-    break;
+	break;
   }
 
   case ACTION_INV_EQUIP: {
-    if (Gameplay.selected_item != 0) {
-      Item *item = getItemFromID(Gameplay.selected_item);
-      if (item->stat == STAT_ATK) {
-        int temp = Gameplay.stuff[0];
-        Gameplay.player_atk -= getItemFromID(Gameplay.stuff[0])->value_stat;
+	if (Gameplay.selected_item != 0) {
+	  Item *item = getItemFromID(Gameplay.selected_item);
+	  if (item->stat == STAT_ATK) {
+		int temp = Gameplay.stuff[0];
+		Gameplay.player_atk -= getItemFromID(Gameplay.stuff[0])->value_stat;
 
-        Gameplay.stuff[0] = Gameplay.selected_item;
-        Gameplay.items = inventoryDel(Gameplay.selected_item);
-        Gameplay.items = inventoryAdd(temp);
+		Gameplay.stuff[0] = Gameplay.selected_item;
+		Gameplay.items = inventoryDel(Gameplay.selected_item);
+		Gameplay.items = inventoryAdd(temp);
 
-        Gameplay.player_atk += item->value_stat;
-      } else if (item->stat == STAT_DEF) {
-        int temp = Gameplay.stuff[1];
-        Gameplay.player_def -= getItemFromID(Gameplay.stuff[1])->value_stat;
+		Gameplay.player_atk += item->value_stat;
+	  } else if (item->stat == STAT_DEF) {
+		int temp = Gameplay.stuff[1];
+		Gameplay.player_def -= getItemFromID(Gameplay.stuff[1])->value_stat;
 
-        Gameplay.stuff[1] = Gameplay.selected_item;
-        Gameplay.items = inventoryDel(Gameplay.selected_item);
-        Gameplay.items = inventoryAdd(temp);
+		Gameplay.stuff[1] = Gameplay.selected_item;
+		Gameplay.items = inventoryDel(Gameplay.selected_item);
+		Gameplay.items = inventoryAdd(temp);
 
-        Gameplay.player_def += item->value_stat;
-      }
+		Gameplay.player_def += item->value_stat;
+	  }
 
-      Gameplay.selected_item = 0;
-      Gameplay.index_selected_item = -1;
-    }
+	  Gameplay.selected_item = 0;
+	  Gameplay.index_selected_item = -1;
+	}
 
-    break;
+	break;
   }
 
   case ACTION_INV_THROW: {
-    if (Gameplay.selected_item != 0) {
-      Gameplay.items = inventoryDel(Gameplay.selected_item);
-      Gameplay.selected_item = 0;
-      Gameplay.index_selected_item = -1;
-    }
-    break;
+	if (Gameplay.selected_item != 0) {
+	  Gameplay.items = inventoryDel(Gameplay.selected_item);
+	  Gameplay.selected_item = 0;
+	  Gameplay.index_selected_item = -1;
+	}
+	break;
   }
 
   case ACTION_INV_QUIT: {
-    Gameplay.selected_item = 0;
-    Gameplay.index_selected_item = -1;
-    Gameplay.state = Gameplay.old_state;
-    break;
+	Gameplay.selected_item = 0;
+	Gameplay.index_selected_item = -1;
+	Gameplay.state = Gameplay.old_state;
+	break;
   }
 
   case ACTION_TALK_YES: {
-    int index = Gameplay.index_current_npc;
-    Gameplay.npcs[index].status =
-        npcResponse(&Gameplay.npcs[index], TALK, YES, Gameplay.name);
-    break;
+	int index = Gameplay.index_current_npc;
+	Gameplay.npcs[index].status =
+		npcResponse(&Gameplay.npcs[index], TALK, YES, Gameplay.name);
+	break;
   }
 
   case ACTION_TALK_NO: {
-    int index = Gameplay.index_current_npc;
-    Gameplay.npcs[index].status =
-        npcResponse(&Gameplay.npcs[index], TALK, NO, Gameplay.name);
-    break;
+	int index = Gameplay.index_current_npc;
+	Gameplay.npcs[index].status =
+		npcResponse(&Gameplay.npcs[index], TALK, NO, Gameplay.name);
+	break;
   }
 
   case ACTION_TALK_THREAT: {
-    int index = Gameplay.index_current_npc;
-    Gameplay.npcs[index].status =
-        npcResponse(&Gameplay.npcs[index], TALK, THREAT, Gameplay.name);
-    break;
+	int index = Gameplay.index_current_npc;
+	Gameplay.npcs[index].status =
+		npcResponse(&Gameplay.npcs[index], TALK, THREAT, Gameplay.name);
+	break;
   }
 
   case ACTION_TALK_QUIT: {
-    Gameplay.state = STATE_INTERACTION;
-    break;
+	Gameplay.state = STATE_INTERACTION;
+	break;
   }
   }
 }
@@ -427,12 +427,14 @@ void processAction(int action) {
  * @param item_id Identifiant de l’objet à gérer
  */
 void processItem(int item_id) {
-  Item *item = getItemFromID(item_id);
-  if (item->id == 204) {
-    Gameplay.player_current_life -= 10;
-  } else if (item->id == 205 && Gameplay.area == 5) {
-    EndGame(1);
-  }
+	Item *item = getItemFromID(item_id);
+	if (item->id == 204) {
+		Gameplay.player_current_life -= 10;
+	} else if (item->id == 205 && Gameplay.area == 5) {
+		EndGame(1);
+	} else if (item->id == ITEM_CUPCAKE) {
+		Gameplay.player_current_life = Gameplay.player_max_life;
+	}
 }
 
 /**
@@ -447,15 +449,15 @@ void processItem(int item_id) {
  */
 SDL_Texture *getItemTexture(int i, int inventory) {
   if (inventory == 1) {
-    if (Gameplay.items[i] == 0)
-      return NULL;
+	if (Gameplay.items[i] == 0)
+	  return NULL;
 
-    return getItemFromID(Gameplay.items[i])->tex;
+	return getItemFromID(Gameplay.items[i])->tex;
   } else {
-    if (Gameplay.stuff[i] == 0)
-      return NULL;
+	if (Gameplay.stuff[i] == 0)
+	  return NULL;
 
-    return getItemFromID(Gameplay.stuff[i])->tex;
+	return getItemFromID(Gameplay.stuff[i])->tex;
   }
 }
 
@@ -471,10 +473,10 @@ SDL_Texture *getItemTexture(int i, int inventory) {
  */
 void getCurrentItemDesc(char *desc) {
   if (Gameplay.selected_item != 0) {
-    Item *item = getItemFromID(Gameplay.selected_item);
-    strcpy(desc, item->description);
+	Item *item = getItemFromID(Gameplay.selected_item);
+	strcpy(desc, item->description);
   } else
-    desc[0] = '\0';
+	desc[0] = '\0';
 }
 
 /**
@@ -486,9 +488,9 @@ void getCurrentItemDesc(char *desc) {
  */
 void EndGame(int successful) {
   if (successful) {
-    Gameplay.state = STATE_WON;
+	Gameplay.state = STATE_WON;
   } else {
-    Gameplay.state = STATE_LOST;
+	Gameplay.state = STATE_LOST;
   }
 }
 
@@ -500,39 +502,45 @@ void EndGame(int successful) {
  * @param gold Valeur de l’objet
  */
 void buyItem(int item, int gold) {
-  if (item == ITEM_NONE) {
-    Gameplay.gold -= gold;
-    if (Gameplay.gold < 0)
-      Gameplay.gold = 0;
-  }
-  if (item == ITEM_BEER) {
-    if (Gameplay.gold >= 5) {
-      inventoryAdd(204);
-      Gameplay.gold -= 5;
-    }
-  }
-  if (item == ITEM_CLETTER) {
-    inventoryAdd(202);
-  }
-  if (item == ITEM_PLETTER) {
-    inventoryAdd(201);
-  }
-  if (item == ITEM_AXE) {
-    if (Gameplay.gold >= 50) {
-      inventoryAdd(51);
-      Gameplay.gold -= 50;
-    }
-  }
-  if (item == ITEM_ARMOR) {
-    if (Gameplay.gold >= 50) {
-      inventoryAdd(40);
-      Gameplay.gold -= 50;
-    }
-  }
-  if (item == ITEM_POISON) {
-    if (Gameplay.gold >= 50) {
-      inventoryAdd(205);
-      Gameplay.gold -= 50;
-    }
-  }
+	if (item > 200) {
+		if (Gameplay.gold >= gold) {
+			inventoryAdd(item);
+			Gameplay.gold -= gold;
+		}
+	}
+	if (item == ITEM_NONE) {
+		Gameplay.gold -= gold;
+		if (Gameplay.gold < 0)
+			Gameplay.gold = 0;
+	}
+	if (item == ITEM_BEER) {
+		if (Gameplay.gold >= 5) {
+			inventoryAdd(204);
+			Gameplay.gold -= 5;
+		}
+	}
+	if (item == ITEM_CLETTER) {
+		inventoryAdd(202);
+	}
+	if (item == ITEM_PLETTER) {
+		inventoryAdd(201);
+	}
+	if (item == ITEM_AXE) {
+		if (Gameplay.gold >= 50) {
+			inventoryAdd(51);
+			Gameplay.gold -= 50;
+		}
+	}
+	if (item == ITEM_ARMOR) {
+		if (Gameplay.gold >= 50) {
+			inventoryAdd(40);
+			Gameplay.gold -= 50;
+		}
+	}
+	if (item == ITEM_POISON) {
+		if (Gameplay.gold >= 50) {
+			inventoryAdd(205);
+			Gameplay.gold -= 50;
+		}
+	}
 }

@@ -49,7 +49,8 @@ enum {
   ITEM_PLETTER, ///< Lettre
   ITEM_ARMOR, ///< Armure
   ITEM_AXE, ///< Hache
-  ITEM_POISON ///< Poison
+  ITEM_POISON, ///< Poison
+  ITEM_CUPCAKE = 203
 };
 
 /// Une srtucture pour représenter un objet de l’inventaire

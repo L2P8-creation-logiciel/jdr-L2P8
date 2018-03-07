@@ -18,7 +18,7 @@
 /** type entier non signé qui n'est jamais utilisé. */
 typedef unsigned int uint;
 
-/** 
+/**
  * Tableau de deux entiers représentant l'équipement courant du joueur. La
  * première case doit contenir l'identifiant d'un objet de type attaque, et la
  * seconde, l'identifiant d'un objet de type défense.\n
@@ -27,23 +27,23 @@ typedef unsigned int uint;
  */
 int EquipementCourant[2]={24,18};
 
-/** 
+/**
  * Inventaire du joueur.\n
  * Tableau statique de 8 valeurs contenant les identifiants des objets détenus
  * par le joueur.
  */
 int InvJoueur[8];
 /** Inventaire du marchand d'arme.\n
-	Tableau statique de 8 valeurs, jamais utilisé **/ 
+	Tableau statique de 8 valeurs, jamais utilisé **/
 int InvMarchandArme[8] = {20, 21, 22, 23, 19, 0, 0, 0};
 /** Inventaire du marchand d'armure.\n
-	Tableau statique de 8 valeurs, jamais utilisé **/ 
+	Tableau statique de 8 valeurs, jamais utilisé **/
 int InvMarchandArmure[8] =  {16, 17, 18, 0, 0, 0, 0, 0};
 
 /** Réserve d'or du joueur */
 int Gold;
 
-/** 
+/**
  * Modifie les variables globales @ref Items et @ref NbItems :\n
  * - @ref NbItems reçoit le nombre de lignes du fichier `"Data/equipement.txt"`\n
  * - Le tableau Items est alloué.\n
@@ -88,7 +88,7 @@ void initItems()
 	fclose( file );
 }
 
-/** 
+/**
  * Libère le champs `.tex` de chacune des structures @ref Item du tableau @ref
  * Items, puis libère le pointeur sur @ref Items.
  */
@@ -101,7 +101,7 @@ void closeItems()
 	free( Items );
 }
 
-/** 
+/**
  * Initialise l'inventaire du joueur @ref InvJoueur.
  * @return Pointeur @ref InvJoueur sur l'inventaire du joueur
  */
@@ -112,7 +112,7 @@ int * inventoryInit () {
 	return InvJoueur;
 }
 
-/** 
+/**
  * Cherche l'objet d'identifiant `id` dans l'inventaire du joueur @ref
  * InvJoueur. Produit une erreur `assert(0)` si l'objet demandé n'appartient
  * pas à l'inventaire.
@@ -134,7 +134,7 @@ Item* getItemFromID(int id)
 	assert( 0 );
 }
 
-/** 
+/**
  * Modifie la chaîne de caractères `description` passée en argument en
  * remplaçant chaque caractère '_' par un espace. Cette fonction est de
  * complexité quadratique quelque soit son argument.
@@ -153,7 +153,7 @@ void removeUnderscore( char* description )
 
 
 
-/** 
+/**
  * Modifie l'inventaire du joueur @ref InvJoueur en lui ajoutant l'objet
  * d'identifiant `id_obj`. Si l'inventaire est plein, l'objet n'est pas ajouté
  * et un affichage le signale. Si la constante @ref MAX_ITEM est supérieure à
@@ -163,7 +163,7 @@ void removeUnderscore( char* description )
  */
 int * inventoryAdd(int id_obj) {
 	int incrementation, plein =0;
-	
+
 	for (incrementation = 0; incrementation < MAX_ITEM; incrementation ++) {
 		if (InvJoueur[incrementation] == 0) {
 			InvJoueur[incrementation] = id_obj;
@@ -176,10 +176,10 @@ int * inventoryAdd(int id_obj) {
 		}
 	}
 
-	 return InvJoueur;
+	return InvJoueur;
 }
 
-/** 
+/**
  * Modifie la variable globale @ref Gold en lui ajoutant la valeur de son
  * argument `gold_more`, laquelle peut être négative.
  * @param gold_more : la quantité d'or à ajouter à @ref Gold
@@ -190,7 +190,7 @@ int inventoryAddGold(int gold_more) {
 	return Gold;
 }
 
-/** 
+/**
  * Modifie l'inventaire du joueur @ref InvJoueur en lui retranchant l'objet
  * d'identifiant `id_obj`. Le cas échéant, un affichage signale que l'objet
  * `id_obj` n'apparaît pas dans @ref InvJoueur. Si la constante @ref MAX_ITEM
@@ -200,24 +200,24 @@ int inventoryAddGold(int gold_more) {
  */
 int * inventoryDel(int id_obj) {
 	int incrementation, present;
-	
+
    for(incrementation = 0; incrementation < MAX_ITEM; incrementation ++) {
 	  if (InvJoueur[incrementation] == id_obj) {
-	  	InvJoueur[incrementation] = 0;
+		InvJoueur[incrementation] = 0;
 		if (id_obj == EquipementCourant[0]) EquipementCourant[0] = 0;
 		if (id_obj == EquipementCourant[1]) EquipementCourant[1] = 0;
-	  	return InvJoueur;
+		return InvJoueur;
 	  }
 	  else present ++;
 	}
 	if (present == MAX_ITEM) {
 		printf("Ton inventaire ne contient pas l'objet\n");
-	 	return InvJoueur;
+		return InvJoueur;
 	 }
 return InvJoueur;
 }
 
-/** 
+/**
  * Modifie la variable globale @ref Gold en lui retranchant la valeur de son
  * argument `gold_less`, laquelle peut être négative.
  * @param gold_more : la quantité d'or à retrancher à @ref Gold
@@ -233,7 +233,7 @@ int inventoryDelGold(int gold_less) {
   * Teste si la valeur de @ref Gold est supérieure au prix de l'objet
   * d'identifiant `id_obj`
   * @param id_obj : identifiant d'un objet
-  * \return 
+  * \return
   * - `1` si la valeur de @ref Gold est supérieure au prix de l'objet
   * d'identifiant `id_obj`\n
   * - `-1` en cas d'erreur\n
@@ -245,12 +245,12 @@ int enoughtGold(int id_obj) {
 	int equi, ajout_stat, temporaire, cout;
 	FILE * equipement;
 	equipement=fopen("equipement.txt", "r+");
-	if(equipement == NULL) 
+	if(equipement == NULL)
    {
-      printf("Error in opening file");
-      return -1;
+	  printf("Error in opening file");
+	  return -1;
    }
-    while (!feof(equipement)) {
+	while (!feof(equipement)) {
 		fscanf(equipement, "%s %d %d %s %d\n", nom, &equi, &ajout_stat, type, &cout);
 		if (id_obj == equi) {
 			if (cout < Gold) {
@@ -277,19 +277,19 @@ void equipementContenu() {
 	int equi, ajout_stat, cout;
 	FILE * equipement;
 	equipement=fopen("equipement.txt", "r+");
-	if(equipement == NULL) 
+	if(equipement == NULL)
    {
-      printf("Error in opening file");
-      return ;
+	  printf("Error in opening file");
+	  return ;
    }
 	while (!feof(equipement)) {
 		fscanf(equipement, "%s %d %d %s %d\n", nom, &equi, &ajout_stat, type, &cout);
- 		if (EquipementCourant[0] == equi) printf("Vous êtes équipé d'un(e) %s qui rajoute %d en %s (id : %d)\n", nom, ajout_stat, type, equi);
+		if (EquipementCourant[0] == equi) printf("Vous êtes équipé d'un(e) %s qui rajoute %d en %s (id : %d)\n", nom, ajout_stat, type, equi);
 		if (EquipementCourant[1] == equi) printf("Vous êtes équipé d'un(e) %s qui rajoute %d en %s (id : %d)\n", nom, ajout_stat, type, equi);
 	}
 }
 
-/** 
+/**
  * Modifie le tableau global @ref EquipementCourant.\n
  * Demande à l'utilisateur l'identifiant de l'objet qu'il souhaite prendre en
  * main, via l'entrée standard (non protégée) :\n
@@ -313,17 +313,17 @@ void equiper() {
 	int equi, ajout_stat, temporaire, cout;
 	FILE * equipement;
 	equipement=fopen("equipement.txt", "r+");
-	if(equipement == NULL) 
+	if(equipement == NULL)
    {
-      printf("Error in opening file");
-      return ;
+	  printf("Error in opening file");
+	  return ;
    }
 	printf("Entrez un equipement que vous voulez equiper (vous ne pouvez avoir qu'une seule arme et une seule armure d'equiper en meme temps):");
 	scanf("%d", &id_obj);
-    while (!feof(equipement)) {
+	while (!feof(equipement)) {
 		fscanf(equipement, "%s %d %d %s %d\n", nom, &equi, &ajout_stat, type, &cout);
 		for (incrementation = 0; incrementation < MAX_ITEM; incrementation ++) {
-	 		if (equi == id_obj && !strcmp(type, type_att)) {
+			if (equi == id_obj && !strcmp(type, type_att)) {
 				if (EquipementCourant[0] == 0) EquipementCourant[0] = id_obj;
 				else {
 					printf("Il y a deja un objet en attaque. Le remplacer? (1 pour oui, 2 pour non) \n");
@@ -352,9 +352,9 @@ void equiper() {
 			}
 		}
 	}
-} 
+}
 
-/** 
+/**
  * Modifie le tableau global @ref  EquipementCourant.\n
  * Invite l'utilisateur en déséquiper un objet en saisissant l'identifiant de
  * l'objet via l'entrée standard (non protégée).\n
@@ -376,7 +376,7 @@ void desequiper() {
 
 
 // ===============================================================================
-// Pas utilisé 																										*/
+// Pas utilisé																										*/
 // ===============================================================================
 
 /*int * inventoryContenu(int npc) {
@@ -385,10 +385,10 @@ void desequiper() {
 	int equi, ajoutStat, temporaire, cout;
 	FILE * equipement;
 	equipement=fopen("equipement.txt", "r+");
-	if(equipement == NULL) 
+	if(equipement == NULL)
    {
-      printf("Error in opening file");
-      return(invJoueur);
+	  printf("Error in opening file");
+	  return(invJoueur);
    }
    if (npc == 0) {
 	for (incrementation = 0; incrementation < MAX_ITEM; incrementation ++) {
@@ -396,8 +396,8 @@ void desequiper() {
 		while (!feof(equipement)) {
 			fscanf(equipement, "%s %d %d %s %d\n", nom, &equi, &ajoutStat, type, &cout);
 			temporaire = invJoueur[incrementation];
-	 		if (temporaire == equi) printf("Vous avez un(e) %s qui rajoute %d %s (id : %d)\n", nom, ajoutStat, type, equi);
-	 	}
+			if (temporaire == equi) printf("Vous avez un(e) %s qui rajoute %d %s (id : %d)\n", nom, ajoutStat, type, equi);
+		}
 	 }
 	printf("Vous avez %d d'or", gold);
    }
@@ -407,8 +407,8 @@ void desequiper() {
 		while (!feof(equipement)) {
 			fscanf(equipement, "%s %d %d %s %d\n", nom, &equi, &ajoutStat, type, &cout);
 			temporaire = invMarchandArme[incrementation];
-	 		if (temporaire == equi) printf("Le marchand a un(e) %s qui rajoute %d %s au prix %d (id : %d)\n", nom, ajoutStat, type, cout, equi);
-	 	}
+			if (temporaire == equi) printf("Le marchand a un(e) %s qui rajoute %d %s au prix %d (id : %d)\n", nom, ajoutStat, type, cout, equi);
+		}
 	 }
    }
    else if(npc == 2) {
@@ -417,12 +417,12 @@ void desequiper() {
 		while (!feof(equipement)) {
 			fscanf(equipement, "%s %d %d %s %d\n", nom, &equi, &ajoutStat, type, &cout);
 			temporaire = invMarchandArmure[incrementation];
-	 		if (temporaire == equi) printf("Le marchand a un(e) %s qui rajoute %d %s au prix %d (id : %d)\n", nom, ajoutStat, type, cout, equi);
-	 	}
+			if (temporaire == equi) printf("Le marchand a un(e) %s qui rajoute %d %s au prix %d (id : %d)\n", nom, ajoutStat, type, cout, equi);
+		}
 	 }
    }
    else printf("Ceci n'est pas un npc correct");
-   
+
 	 fclose(equipement);
 	 return invJoueur;
 }*/
@@ -468,7 +468,7 @@ void desequiper() {
 			printf("\n");
 			inventoryContenu(0);
 			printf("\n");
-			for(incrementation = 0; incrementation < MAX_ITEM; incrementation ++) 
+			for(incrementation = 0; incrementation < MAX_ITEM; incrementation ++)
 				if (invMarchandArme[incrementation] == idObj)	invMarchandArme[incrementation] = 0;
 			goto boucle;
 		}

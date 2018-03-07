@@ -1,10 +1,10 @@
 /**
  * \file Npc.c
- * \brief Définition des types et des fonctions centrées autour 
+ * \brief Définition des types et des fonctions centrées autour
  * de l'interaction avec les NPC
  */
 
-/* 	
+/*
 	This is the second draft
 	of the npc_response function
 	for the srping 2015 program project
@@ -19,7 +19,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-/* Prototypes 
+/* Prototypes
 int encounter_init (uint npc_type, npc_stats * npc, char * npc_name);
 int npc_response (uint * situation, npc_stats * npc, uint * action_type, uint * action_value, char * npc_name);
 int encounter_end (npc_stats npc);
@@ -58,7 +58,7 @@ void pushQueue( char* dialog )
 
 /**
  * `addDialog` permet d'ajouter une ligne de dialogue dans la queue
- * des dialogues à afficher sous la forme d'un message formatté par 
+ * des dialogues à afficher sous la forme d'un message formatté par
  * les fonctions de la famille printf.
  * @param format La chaine de format
  * @param format Les paramêtres de formattage
@@ -77,7 +77,7 @@ void addDialog( char* format, ... )
 		if( buffer[ i ] == '\n' )
 			buffer[ i ] = 0;
 	}
-	
+
 	pushQueue( buffer );
 }
 
@@ -160,7 +160,60 @@ int encounterInit (uint npc_type, npc_stats * npc, char * npc_name) {
  * @param diag L'état de l'intéraction avec le NPC
  * @param npc_name Le nom du NPC concerné par l'intéraction
  */
+
+typedef struct npc_dialog npc_dialog;
+
+typedef struct npc_line {
+	diag_val val;
+	void (*behavior)(npc_dialog *dial);
+} npc_line;
+
+struct npc_dialog  {
+	uint type;
+	uint size;
+	npc_line lines[PASS + 1];
+	void *userdata;
+};
+
+void fairy_intro(npc_dialog *dial) {
+	addDialog("Grande fée - Salut, prend ceci");
+	buyItem(ITEM_CUPCAKE, 0);
+	dial->userdata = malloc(4);
+}
+
+void fairy_intimidated() {
+	addDialog("Grande fée - Ah me fait pas de mal, tiens ceci");
+//	buyItem(ITEM_CUPCAKE, 0);
+}
+
+void nos_perso(npc_dialog nd, diag_val v) {
+	for (uint i = 0; i < nd.size; ++i) {
+		if(nd.lines[i].val == v) {
+			nd.lines[i].behavior(&nd);
+		}
+	}
+}
+
+enum {
+	FAIRY = 1000,
+	REINE2
+};
+
+npc_dialog Dials[] = {
+	{
+		FAIRY, 2, {
+			{INTRO, fairy_intro },
+			{SURRENDER, fairy_intro},
+			{INTIMIDATED, fairy_intimidated},
+		}, 0
+	},
+};
+
 void dialogue (uint npc_type, diag_val diag, char * npc_name) {
+	if (npc_type > 999) {
+		nos_perso(Dials[npc_type - 1000], diag);
+		return;
+	}
 	if (diag == INTRO) {
 		if (npc_type < 100) {
 			if (npc_type == 50)
@@ -299,7 +352,7 @@ void dialogue (uint npc_type, diag_val diag, char * npc_name) {
  * @return Le nouveau status du NPC
  */
 int advDialogue (talk_type talk, npc_stats * npc, char * npc_name) {
-	
+
 	if (npc->type < 100) { /* guard */
 		if (talk == YES) {
 			if (npc->type == 50) {
@@ -581,7 +634,7 @@ int advDialogue (talk_type talk, npc_stats * npc, char * npc_name) {
 		}
 		addDialog("%s    -Sorry pal but beer is all I have. Want some?\n", npc_name);
 		return 0;
-		
+
 	}
 	return 99;
 }
