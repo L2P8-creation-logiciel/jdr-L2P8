@@ -164,7 +164,7 @@ int encounterInit (uint npc_type, npc_stats * npc, char * npc_name) {
 typedef struct npc_dialog npc_dialog;
 
 typedef struct npc_line {
-	diag_val val;
+	uint val;
 	void (*behavior)(npc_dialog *dial);
 } npc_line;
 
@@ -175,21 +175,35 @@ struct npc_dialog  {
 	void *userdata;
 };
 
+typedef struct {
+	int item_given;
+} fairy_state;
+
 void fairy_intro(npc_dialog *dial) {
-	addDialog("Grande fée - Salut, prend ceci");
-	buyItem(ITEM_CUPCAKE, 0);
-	dial->userdata = malloc(4);
+	if (!dial->userdata)
+		dial->userdata = calloc(1, sizeof(fairy_state));
+	fairy_state *self = dial->userdata;
+	if(!self->item_given) {
+		addDialog("Great Fairy - It's dangerous to go alone");
+		addDialog("Great Fairy - Take this!");
+		addDialog("Great Fairy - Keep it a secret from everyone!");
+		buyItem(ITEM_CUPCAKE, 0);
+		self->item_given = 1;
+	} else {
+		addDialog("Great Fairy - Haha nope");
+	}
 }
 
 void fairy_intimidated() {
-	addDialog("Grande fée - Ah me fait pas de mal, tiens ceci");
-//	buyItem(ITEM_CUPCAKE, 0);
+	addDialog("Grande fée - Ah, ne me fait pas de mal, tiens ceci");
+	//buyItem(ITEM_CUPCAKE, 0);
 }
 
-void nos_perso(npc_dialog nd, diag_val v) {
-	for (uint i = 0; i < nd.size; ++i) {
-		if(nd.lines[i].val == v) {
-			nd.lines[i].behavior(&nd);
+// v peut etre un diag_val ou un talk_type
+void nos_perso(npc_dialog *nd, uint v) {
+	for (uint i = 0; i < nd->size; ++i) {
+		if(nd->lines[i].val == v) {
+			nd->lines[i].behavior(nd);
 		}
 	}
 }
@@ -205,13 +219,15 @@ npc_dialog Dials[] = {
 			{INTRO, fairy_intro },
 			{SURRENDER, fairy_intro},
 			{INTIMIDATED, fairy_intimidated},
+			//{YES, fairy_said_yes},
+			//{NO, fairy_said_no},
 		}, 0
 	},
 };
 
 void dialogue (uint npc_type, diag_val diag, char * npc_name) {
 	if (npc_type > 999) {
-		nos_perso(Dials[npc_type - 1000], diag);
+		nos_perso(&Dials[npc_type - 1000], diag);
 		return;
 	}
 	if (diag == INTRO) {
@@ -352,6 +368,10 @@ void dialogue (uint npc_type, diag_val diag, char * npc_name) {
  * @return Le nouveau status du NPC
  */
 int advDialogue (talk_type talk, npc_stats * npc, char * npc_name) {
+	if (npc->type > 999) {
+		nos_perso(&Dials[npc->type - 1000], talk);
+		return 0;
+	}
 
 	if (npc->type < 100) { /* guard */
 		if (talk == YES) {
