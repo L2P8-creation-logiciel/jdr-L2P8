@@ -200,11 +200,11 @@ void fairy_intimidated() {
 }
 
 void paysanne_intro(npc_dialog *dial) {
-    addDialog("Paysane : Aurais-tu peur de quelque poison?");
+	addDialog("Paysane : Aurais-tu peur de quelque poison?");
 }
 void paysanne_said_yes(npc_dialog *dial) {
-    addDialog("Paysane : Prend cette pomme et je te donnerai tout mon or.");
-    buyItem(ITEM_APPLE, -10000);
+	addDialog("Paysane : Prend cette pomme et je te donnerai tout mon or.");
+	buyItem(ITEM_APPLE, -10000);
 }
 
 // v peut etre un diag_val ou un talk_type
@@ -217,24 +217,26 @@ void nos_perso(npc_dialog *nd, uint v) {
 }
 
 enum {
-    FAIRY = 1000,
-    PAYSANNE
+	FAIRY = 1000,
+	PAYSANNE
 };
 
 npc_dialog Dials[] = {
-    {
-        FAIRY, 2, {
-            {INTRO, fairy_intro },
-            {SURRENDER, fairy_intro},
-            {INTIMIDATED, fairy_intimidated},
-            //{YES, fairy_said_yes},
-            //{NO, fairy_said_no},
-        }, 0
-    },
-    PAYSANNE, 2, {
-        {INTRO, paysanne_intro},
-        {YES, paysanne_said_yes},
-    }, 0
+	{
+		FAIRY, 2, {
+			{INTRO, fairy_intro },
+			{SURRENDER, fairy_intro},
+			{INTIMIDATED, fairy_intimidated},
+			//{YES, fairy_said_yes},
+			//{NO, fairy_said_no},
+		}, 0
+	},
+	{
+		PAYSANNE, 2, {
+			{INTRO, paysanne_intro},
+			{YES, paysanne_said_yes},
+		}, 0
+	}
 };
 
 
