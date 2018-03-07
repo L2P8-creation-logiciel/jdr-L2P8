@@ -435,6 +435,9 @@ void processItem(int item_id) {
 	} else if (item->id == ITEM_CUPCAKE) {
 		Gameplay.player_current_life = Gameplay.player_max_life;
 	}
+	else if (item->id == ITEM_APPLE) {
+		EndGame(0);
+	}
 }
 
 /**
@@ -502,7 +505,7 @@ void EndGame(int successful) {
  * @param gold Valeur de l’objet
  */
 void buyItem(int item, int gold) {
-	if (item > 200) {
+	if (item >= 1000) {
 		if (Gameplay.gold >= gold) {
 			inventoryAdd(item);
 			Gameplay.gold -= gold;

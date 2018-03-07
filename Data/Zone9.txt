@@ -7,3 +7,4 @@
 0 tavernier_down 490 120 252 309
 0 tavernier_up 600 320 400 3598
 0 garde2_right 10 150 55 248
+0 paysanne 655 120 1001 248

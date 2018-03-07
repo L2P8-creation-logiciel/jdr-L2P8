@@ -50,7 +50,8 @@ enum {
   ITEM_ARMOR, ///< Armure
   ITEM_AXE, ///< Hache
   ITEM_POISON, ///< Poison
-  ITEM_CUPCAKE = 203
+  ITEM_CUPCAKE = 1000,
+  ITEM_APPLE
 };
 
 /// Une srtucture pour représenter un objet de l’inventaire
