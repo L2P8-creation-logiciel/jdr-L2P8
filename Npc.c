@@ -154,31 +154,45 @@ int encounterInit (uint npc_type, npc_stats * npc, char * npc_name) {
 }
 
 /**
- * `dialogue` génère une ligne de dialogue en fonction de l'état d'intéraction,
- * du type, et du nom du NPC.
- * @param npc_type Le type du NPC concerné par l'intéraction
- * @param diag L'état de l'intéraction avec le NPC
- * @param npc_name Le nom du NPC concerné par l'intéraction
+ * \typedef `npc_dialog` représente le comportement du NPC `Grande fée`
+ * lorsque le joueur clique dessus
+ * @param dial pointeur vers le type de NPC associé
  */
-
 typedef struct npc_dialog npc_dialog;
 
+/**
+ * \struct npc_line
+ * \brief Associe un type de dialogue à un comportement
+ */
 typedef struct npc_line {
-	uint val;
-	void (*behavior)(npc_dialog *dial);
+	uint val; ///< Le type du dialogue
+	void (*behavior)(npc_dialog *dial); ///< Le comportement associé
 } npc_line;
 
+/**
+ * \struct npc_dialog
+ * \brief Définie un NPC avec ses dialogue associés
+ */
 struct npc_dialog  {
-	uint type;
-	uint size;
-	npc_line lines[PASS + 1];
-	void *userdata;
+	uint type; ///< type du NPC
+	uint size; ///< Le nombre de ligne de comportements associées
+	npc_line lines[PASS + 1]; ///< Comportements associés
+	void *userdata; ///< Pointeur définie par l'utilisateur pour que le NPC puisse maintenir un état interne
 };
 
+/**
+ * \struct fairy_state
+ * \brief Représente l'état interne de la Grande Fée
+ */
 typedef struct {
 	int item_given;
 } fairy_state;
 
+/**
+ * `fairy_intro` représente le comportement du NPC `Grande fée`
+ * lorsque le joueur clique dessus
+ * @param dial pointeur vers le type de NPC associé
+ */
 void fairy_intro(npc_dialog *dial) {
 	if (!dial->userdata)
 		dial->userdata = calloc(1, sizeof(fairy_state));
@@ -194,20 +208,41 @@ void fairy_intro(npc_dialog *dial) {
 	}
 }
 
+/**
+ * `fairy_intimidated` représente le comportement du NPC `Grande fée`
+ * lorsque le joueur l'intimide
+ * @param dial pointeur vers le type de NPC associé
+ */
 void fairy_intimidated() {
 	addDialog("Grande fée - Ah, ne me fait pas de mal, tiens ceci");
-	//buyItem(ITEM_CUPCAKE, 0);
+	buyItem(ITEM_CUPCAKE, 0);
 }
 
+/**
+ * `paysanne_intro` représente le comportement du NPC `Paysanne`
+ * lorsque le joueur clique dessus
+ * @param dial pointeur vers le type de NPC associé
+ */
 void paysanne_intro(npc_dialog *dial) {
 	addDialog("Paysane : Aurais-tu peur de quelque poison?");
 }
+
+/**
+ * `paysanne_said_yes` représente le comportement du NPC `Paysanne`
+ * lorsque le joueur lui dit "Oui"
+ * @param dial pointeur vers le type de NPC associé
+ */
 void paysanne_said_yes(npc_dialog *dial) {
 	addDialog("Paysane : Prend cette pomme et je te donnerai tout mon or.");
 	buyItem(ITEM_APPLE, -10000);
 }
 
-// v peut etre un diag_val ou un talk_type
+/**
+ * `nos_perso` dispatch le comportement associé au type de dialogue donné en paramètre
+ * pour les comportement du npc donné en paramètre
+ * @param nd Pointeur vers la définition du NPC
+ * @param v \ref diag_val ou \ref talk_type correspondant à l'intéraction
+ */
 void nos_perso(npc_dialog *nd, uint v) {
 	for (uint i = 0; i < nd->size; ++i) {
 		if(nd->lines[i].val == v) {
@@ -216,14 +251,21 @@ void nos_perso(npc_dialog *nd, uint v) {
 	}
 }
 
+/**
+ * Cette enum définie les nouveaux types de NPC ajoutés au jeu
+ */
 enum {
 	FAIRY = 1000,
 	PAYSANNE
 };
 
+/**
+ * `Dials` est un tableau associatif qui associe un type de NPC à ses différents
+ * comportement lors d'une intéraction
+ */
 npc_dialog Dials[] = {
 	{
-		FAIRY, 2, {
+		FAIRY, 3, {
 			{INTRO, fairy_intro },
 			{SURRENDER, fairy_intro},
 			{INTIMIDATED, fairy_intimidated},
@@ -240,6 +282,13 @@ npc_dialog Dials[] = {
 };
 
 
+/**
+ * `dialogue` génère une ligne de dialogue en fonction de l'état d'intéraction,
+ * du type, et du nom du NPC.
+ * @param npc_type Le type du NPC concerné par l'intéraction
+ * @param diag L'état de l'intéraction avec le NPC
+ * @param npc_name Le nom du NPC concerné par l'intéraction
+ */
 void dialogue (uint npc_type, diag_val diag, char * npc_name) {
 	if (npc_type > 999) {
 		nos_perso(&Dials[npc_type - 1000], diag);
